@@ -2,16 +2,25 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import ListDecksComponent from './components/ListDecksComponent';
 import StatusBarComponent from './components/StatusBarComponent';
+import DeckComponent from './components/DeckComponent';
 import { StackNavigator } from 'react-navigation';
 import { getDecks } from './utils/api'
 
 
 
-const Stack = StackNavigator({
-  ListDecksComponent: {
-    screen: ListDecksComponent
+const Stack = StackNavigator(
+  {
+    ListDecksComponent: {
+      screen: ListDecksComponent,
+    },
+    DeckComponent: {
+      screen: DeckComponent,
+    },
   },
-})
+  {
+    initialRouteName: 'ListDecksComponent',
+  }
+)
 
 
 export default class App extends React.Component {
@@ -19,8 +28,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-        <Stack />
-      
+      <Stack />
     );
   }
 }

@@ -37,6 +37,13 @@ export function getDecks(){
     .then(parseResult);
 }
 
+export function getDeck(id){
+
+    return AsyncStorage.getItem(KEY).then((res)=>{
+      return res[id];
+    })
+}
+
 function parseResult(results){
     console.log('parse result:',results);
     if(results===null){

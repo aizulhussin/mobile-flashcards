@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ListView } from 'react-native';
+import { StyleSheet, Text, View, ListView,TouchableOpacity} from 'react-native';
 import { getDecks } from '../utils/api';
 import StatusBarComponent from '../components/StatusBarComponent';
 
@@ -36,21 +36,33 @@ const styles = StyleSheet.create({
   });
 
 
-function DeckItem({id,deck,...props}) {
+function DeckItem({id,deck,navigation,...props}) {
 
-    console.log("ID:",id);
+
     var cards = deck.questions;
+
+    console.log("Props:",props);
     
     return (
+        <TouchableOpacity onPress={()=>{
+            //navigation.setParams({otherParam: deck});
+            navigation.navigate('DeckComponent',{id:id});
+            
+            }}>
         <View id={id} style={styles.card}>
             <Text>{deck.title}</Text>
             <Text>{cards.length} cards</Text>
         </View>
+        </TouchableOpacity>
     );
 }
 
 
 export default class ListDecksComponent extends React.Component {
+
+    static navigationOptions = {
+        title: 'Decks',
+      };
 
     constructor(props) {
         super(props);
@@ -69,20 +81,24 @@ export default class ListDecksComponent extends React.Component {
             var keys = Object.keys(JSON.parse(res));
             const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
             this.setState({ decks: JSON.parse(res), dataSource: ds.cloneWithRows(keys),loading:false });
+
+            
         });
 
     }
 
-    renderItem(row){
+    /*renderItem(row){
 
         return (
 
-            <DeckItem id={row} deck={this.state.decks[row]}/>
+            <DeckItem id={row} deck={this.state.decks[row]} navigation={this.props.navigation}/>
         );
 
-    }
+    }*/
 
     render() {
+
+        console.log(this.props);
 
         if(this.state.loading){
             return <View><Text>loading...</Text></View>
@@ -92,7 +108,7 @@ export default class ListDecksComponent extends React.Component {
             <View>
                 <ListView
                     dataSource={this.state.dataSource}
-                    renderRow={(rowData) => <DeckItem id={rowData} deck={this.state.decks[rowData]}/>}
+                    renderRow={(rowData) => <DeckItem id={rowData} navigation = {this.props.navigation} deck={this.state.decks[rowData]}/>}
                 />
             </View>);
 
