@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ListView,TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, ListView,TouchableOpacity,Button} from 'react-native';
 import { getDecks } from '../utils/api';
 import StatusBarComponent from '../components/StatusBarComponent';
 
@@ -7,24 +7,21 @@ import StatusBarComponent from '../components/StatusBarComponent';
 
 
 const styles = StyleSheet.create({
-    bigblue: {
-      color: 'blue',
-      fontWeight: 'bold',
-      fontSize: 30,
-    },
-    red: {
-      color: 'red',
-    },
+    
     card:{
         flex:1,
         flexDirection:'column',
         borderRadius: 4,
         borderWidth: 0.5,
         borderColor: '#000000',
+        backgroundColor:'#FFFFFF',
         padding:40,
-        width:400,
+        width:350,
         height:200,
         marginTop:10,
+        marginLeft:5,
+        marginRight:5,
+        alignItems:'center',
         justifyContent:'center'
     },
     container: {
@@ -47,7 +44,6 @@ function DeckItem({id,deck,navigation,...props}) {
         <TouchableOpacity onPress={()=>{
             //navigation.setParams({otherParam: deck});
             navigation.navigate('DeckComponent',{id:id});
-            
             }}>
         <View id={id} style={styles.card}>
             <Text>{deck.title}</Text>
@@ -60,22 +56,39 @@ function DeckItem({id,deck,navigation,...props}) {
 
 export default class ListDecksComponent extends React.Component {
 
-    static navigationOptions = {
-        title: 'Decks',
+    static navigationOptions = ({ navigation }) => {
+        
+        //const params = navigation.state.params || {};
+    
+        return {
+          title: "Decks",
+          headerRight: (
+            <Button 
+            onPress={()=>navigation.navigate("NewDeckComponent")} 
+            title="ADD" 
+            color="blue" />
+          ),
+        };
       };
 
-    constructor(props) {
+   
+      constructor(props) {
         super(props);
         this.state = {
-
             decks: {},
             dataSource: [],
             loading: true
         }
     }
 
+    addDeck(){
+        console.log("Add Deck");
+        this.props.navigation.navigate("NewDeckComponent")
+    }
 
-    componentDidMount() {
+
+
+    listDecks(){
 
         getDecks().then((res) => {
             var keys = Object.keys(JSON.parse(res));
@@ -87,18 +100,9 @@ export default class ListDecksComponent extends React.Component {
 
     }
 
-    /*renderItem(row){
-
-        return (
-
-            <DeckItem id={row} deck={this.state.decks[row]} navigation={this.props.navigation}/>
-        );
-
-    }*/
-
     render() {
 
-        console.log(this.props);
+        this.listDecks();
 
         if(this.state.loading){
             return <View><Text>loading...</Text></View>

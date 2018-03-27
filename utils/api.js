@@ -37,18 +37,52 @@ export function getDecks(){
     .then(parseResult);
 }
 
+
+export function saveDeckTitle(title){
+
+  return getDecks().then((res)=>{
+    decks = JSON.parse(res);
+    
+    deck = {
+      
+        title:title,
+        questions:[]
+      
+    }
+
+    decks[title] = deck;
+  
+    console.log("Save Deck:",JSON.stringify(decks));
+    AsyncStorage.setItem(KEY,JSON.stringify(decks));
+
+    return true;
+
+  })
+
+}
+
 export function getDeck(id){
 
     return AsyncStorage.getItem(KEY).then((res)=>{
-      return res[id];
-    })
+      console.log("ID is ",id);
+      console.log("Res is ",res);
+      obj = JSON.parse(res);
+      deck = obj[id];
+      console.log("Deck:",deck);
+      return deck;
+    });
+}
+
+function parse(res){
+  
+  return JSON.parse(res);
 }
 
 function parseResult(results){
     console.log('parse result:',results);
     if(results===null){
         console.log("No result. Let's setup");
-        //console.log('setup Data:',decks);
+        console.log('setup Data:',decks);
         AsyncStorage.setItem(KEY,JSON.stringify(decks));
         return decks;
     }else{

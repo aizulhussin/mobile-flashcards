@@ -3,6 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import ListDecksComponent from './components/ListDecksComponent';
 import StatusBarComponent from './components/StatusBarComponent';
 import DeckComponent from './components/DeckComponent';
+import QuizComponent from './components/QuizComponent';
+import NewDeckComponent from './components/NewDeckComponent';
 import { StackNavigator } from 'react-navigation';
 import { getDecks } from './utils/api'
 
@@ -16,6 +18,13 @@ const Stack = StackNavigator(
     DeckComponent: {
       screen: DeckComponent,
     },
+    QuizComponent:{
+      screen:QuizComponent
+    },
+    NewDeckComponent:{
+      screen:NewDeckComponent
+    },
+
   },
   {
     initialRouteName: 'ListDecksComponent',
