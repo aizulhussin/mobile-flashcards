@@ -1,5 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
+import {saveQuizCount} from '../utils/api.js';
+import {setLocalNotification,clearLocalNotification} from "../utils/helper.js";
 
 
 const styles = StyleSheet.create({
@@ -99,9 +101,7 @@ export default class QuizComponent extends React.Component {
     }
 
     answer(answer) {
-        //check answer, if correct advance to next index
-        //console.log("My Answer:", answer, " Question Answer:", this.state.currentQuestion.answer);
-
+        
         score = this.state.score;
 
         //answer matched, increment score
@@ -114,8 +114,14 @@ export default class QuizComponent extends React.Component {
 
         if (nextIndex === this.state.questions.length) {
             //final question reached
+            saveQuizCount();
+
+            clearLocalNotification().then(()=>{
+                setLocalNotification();
+            });
+
             this.setState({ score: score, quizEnd: true });
-            console.log("Last question reached");
+
         } else {
             var nextQuestion = this.state.questions[nextIndex];
             console.log("Next Question:", nextQuestion);
@@ -140,7 +146,7 @@ export default class QuizComponent extends React.Component {
         var q = this.state.currentQuestion;
 
         if (this.state.showAnswer) {
-            console.log("Show Answer..")
+            
             return (
                 <View style={styles.container}>
                     <View style={styles.card}>
@@ -192,6 +198,7 @@ export default class QuizComponent extends React.Component {
                                 onPress={() => this.backToDeck()}
                                 title="Back To Deck"
                                 color="black"
+                                style={{marginTop:5}}
                                 accessibilityLabel="Back To Deck"
                             />
                         </View>
@@ -222,6 +229,7 @@ export default class QuizComponent extends React.Component {
                             onPress={() => this.answer('No')}
                             title="Incorrect"
                             color="red"
+                            style={{marginTop:5}}
                             accessibilityLabel="Incorrect"
                         />
 
@@ -229,6 +237,7 @@ export default class QuizComponent extends React.Component {
                             onPress={() => this.showAnswer()}
                             title="Show Answer"
                             color="black"
+                            style={{marginTop:5}}
                             accessibilityLabel="Show Answer"
                         />
                     </View>

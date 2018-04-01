@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ListView, TouchableOpacity, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, ListView, TouchableOpacity, Button, TextInput,KeyboardAvoidingView } from 'react-native';
 import {saveDeckTitle} from '../utils/api';
 
 const styles = StyleSheet.create({
@@ -64,13 +64,10 @@ export default class NewDeckComponent extends React.Component {
 
     saveDeck() {
         console.log("Save Deck. Title:",this.state.deckTitle);
-        if(saveDeckTitle(this.state.deckTitle)){
-            console.log("Saved");
-            this.props.navigation.goBack();
-
-        }
         
-        //
+        saveDeckTitle(this.state.deckTitle).then(()=>{
+            this.props.navigation.navigate("DeckComponent",{id:this.state.deckTitle});
+        })
     }
 
 
@@ -83,7 +80,7 @@ export default class NewDeckComponent extends React.Component {
                     <View style={styles.titleContainer}>
                         <Text>What is the title of your Deck?</Text>
                     </View>
-
+                    <KeyboardAvoidingView behavior='position' style={{ flex: 1 }}>
                     <View>
 
                         <TextInput
@@ -96,12 +93,13 @@ export default class NewDeckComponent extends React.Component {
                     <View style={styles.buttonContainer}>
                         <Button
                             onPress={() => this.saveDeck()}
-                            title="Submit"
-                            color="#841584"
-                            accessibilityLabel="Learn more about this purple button"
+                            title="Create Deck"
+                            color="blue"
+                            accessibilityLabel="Create Deck"
                         />
 
                     </View>
+                    </KeyboardAvoidingView>
                 </View>
 
             </View>

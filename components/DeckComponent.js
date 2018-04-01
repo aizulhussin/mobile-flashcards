@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, Animated } from 'react-native';
 import { getDeck } from '../utils/api';
+import { Ionicons } from '@expo/vector-icons'
 
 
 const styles = StyleSheet.create({
@@ -13,9 +14,9 @@ const styles = StyleSheet.create({
         height: 100,
         marginTop: 10,
         justifyContent: 'center',
-        backgroundColor:'#ebebeb',
-        marginTop:100,
-        marginBottom:100,
+        backgroundColor: '#ebebeb',
+        marginTop: 100,
+        marginBottom: 100,
         borderRadius: 4,
         borderWidth: 0.5,
         borderColor: '#ebebeb',
@@ -34,8 +35,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
 
-    titleContainer:{
-        marginLeft:50,
+    titleContainer: {
+        marginLeft: 50,
     },
 
     buttonContainer: {
@@ -45,41 +46,97 @@ const styles = StyleSheet.create({
 
 });
 
+class FadeInView extends React.Component {
+    state = {
+      fadeAnim: new Animated.Value(0),
+    }
+  
+    componentDidMount() {
+      Animated.timing(
+        this.state.fadeAnim,
+        {
+          toValue: 1,
+          duration: 5000,
+        }
+      ).start();
+    }
+  
+    render() {
+      let { fadeAnim } = this.state;
+  
+      return (
+        <Animated.View
+          style={{
+            ...this.props.style,
+            opacity: fadeAnim,
+          }}
+        >
+          {this.props.children}
+        </Animated.View>
+      );
+    }
+  }
+
 
 export default class DeckComponent extends React.Component {
 
+    static navigationOptions = ({ navigation }) => {
+
+        return {
+            title: "Deck",
+
+            headerLeft:
+
+            <Ionicons name="md-home" style={{ marginLeft: 5 }} size={24} onPress={() => navigation.navigate("ListDecksComponent")} color="blue" />
+            ,
+
+
+        };
+    };
+
     constructor(props) {
         super(props);
-        this.state = { deck: null, loading: true };
+        this.state = { deck: null, loading: true, fadeAnim: new Animated.Value(0) };
     }
 
 
     componentDidMount() {
+        
+        this.retrieveDeck()
+    }
 
-        console.log("DeckComponent");
+    retrieveDeck() {
+
         const { params } = this.props.navigation.state;
         const id = params ? params.id : null;
 
         getDeck(id).then((res) => {
+
+
+
             console.log("the deck:", res);
-            this.setState({ deck: res, loading: false,id:id });
+            this.setState({ deck: res, loading: false, id: id });
         })
     }
 
 
-    addCard() {
+    addCard(id) {
+
+        console.log("addCard");
+        this.props.navigation.navigate("NewCardComponent", { title: id, retrieveDeck: this.retrieveDeck });
 
     }
 
     startQuiz() {
         console.log("Start Quiz");
-        this.props.navigation.navigate('QuizComponent',{questions:this.state.deck.questions,deckId:this.state.id});
+        this.props.navigation.navigate('QuizComponent', { questions: this.state.deck.questions, deckId: this.state.id });
     }
 
 
 
     render() {
 
+        
 
         if (this.state.loading) {
             return <View><Text>Loading...</Text></View>
@@ -89,31 +146,36 @@ export default class DeckComponent extends React.Component {
 
 
         return (
-            <View style={styles.container}>
+            
+                <View style={styles.container}>
 
-                <View style={styles.card}>
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.header}>{deck.title}</Text>
-                        <Text>{deck.questions.length} cards</Text>
-                    </View>
+                    <FadeInView>
+                    <View style={styles.card}>
+                        <View style={styles.titleContainer}>
+                            <Text style={styles.header}>{deck.title}</Text>
+                            <Text>{deck.questions.length} cards</Text>
+                        </View>
 
-                    <View style={styles.buttonContainer}>
-                        <Button
-                            onPress={() => this.addCard()}
-                            title="Add Card"
-                            color="#841584"
-                            accessibilityLabel="Learn more about this purple button"
-                        />
-                        <Button
-                            onPress={() => this.startQuiz()}
-                            title="Start Quiz"
-                            color="#841584"
-                            accessibilityLabel="Learn more about this purple button"
-                        />
+                        <View style={styles.buttonContainer}>
+                            <Button
+                                onPress={() => this.addCard(deck.title)}
+                                title="Add Card"
+                                color="blue"
+                                accessibilityLabel="Add Card"
+                            />
+                            <Button
+                                onPress={() => this.startQuiz()}
+                                title="Start Quiz"
+                                color="blue"
+                                accessibilityLabel="Start Quiz"
+                                style={{ marginTop: 5 }}
+                            />
+                        </View>
                     </View>
+                    </FadeInView>
+
                 </View>
-
-            </View>
+            
         )
     }
 

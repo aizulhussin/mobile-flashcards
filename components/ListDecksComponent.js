@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ListView,TouchableOpacity,Button} from 'react-native';
 import { getDecks } from '../utils/api';
 import StatusBarComponent from '../components/StatusBarComponent';
+import {Ionicons} from '@expo/vector-icons'
 
 
 
@@ -15,12 +16,12 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         borderColor: '#000000',
         backgroundColor:'#FFFFFF',
-        padding:40,
-        width:350,
+        padding:10,
+        width:300,
         height:200,
         marginTop:10,
-        marginLeft:5,
-        marginRight:5,
+        //marginLeft:5,
+        //marginRight:5,
         alignItems:'center',
         justifyContent:'center'
     },
@@ -29,6 +30,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
+      },
+
+      title:{
+          fontSize:20,
+          fontWeight:'bold'
       }
   });
 
@@ -46,7 +52,7 @@ function DeckItem({id,deck,navigation,...props}) {
             navigation.navigate('DeckComponent',{id:id});
             }}>
         <View id={id} style={styles.card}>
-            <Text>{deck.title}</Text>
+            <Text style={styles.title}>{deck.title}</Text>
             <Text>{cards.length} cards</Text>
         </View>
         </TouchableOpacity>
@@ -62,12 +68,11 @@ export default class ListDecksComponent extends React.Component {
     
         return {
           title: "Decks",
-          headerRight: (
-            <Button 
-            onPress={()=>navigation.navigate("NewDeckComponent")} 
-            title="ADD" 
-            color="blue" />
-          ),
+          headerLeft:null,
+          headerRight: 
+          (<Ionicons name="md-add-circle" style={{marginRight:5}} size={32} onPress={()=>navigation.navigate("NewDeckComponent")} color="blue" />)
+          
+          ,
         };
       };
 
@@ -86,6 +91,11 @@ export default class ListDecksComponent extends React.Component {
         this.props.navigation.navigate("NewDeckComponent")
     }
 
+    componentDidMount(){
+
+        this.listDecks();
+
+    }
 
 
     listDecks(){
@@ -102,14 +112,14 @@ export default class ListDecksComponent extends React.Component {
 
     render() {
 
-        this.listDecks();
+        
 
         if(this.state.loading){
             return <View><Text>loading...</Text></View>
         }
 
         return (
-            <View>
+            <View style={styles.container}>
                 <ListView
                     dataSource={this.state.dataSource}
                     renderRow={(rowData) => <DeckItem id={rowData} navigation = {this.props.navigation} deck={this.state.decks[rowData]}/>}
