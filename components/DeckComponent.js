@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Animated } from 'react-native';
+import { StyleSheet, Text, View, Button, Animated,Alert } from 'react-native';
 import { getDeck } from '../utils/api';
 import { Ionicons } from '@expo/vector-icons'
 
@@ -42,6 +42,10 @@ const styles = StyleSheet.create({
     buttonContainer: {
         marginTop: 20,
         padding: 20
+    },
+
+    button:{
+        marginBottom:20
     }
 
 });
@@ -129,7 +133,19 @@ export default class DeckComponent extends React.Component {
 
     startQuiz() {
         console.log("Start Quiz");
-        this.props.navigation.navigate('QuizComponent', { questions: this.state.deck.questions, deckId: this.state.id });
+        if(this.state.deck.questions.length > 0){
+            this.props.navigation.navigate('QuizComponent', { questions: this.state.deck.questions, deckId: this.state.id });
+        }else{
+            Alert.alert(
+                'No Quiz',
+                'No quiz available. Please add a card',
+                [
+                  {text: 'Cancel', onPress: () => console.log('Cancel'), style: 'cancel'},
+                  {text: 'OK', onPress: () => console.log('OK')},
+                ],
+                { cancelable: false }
+              )
+        }
     }
 
 
@@ -157,19 +173,23 @@ export default class DeckComponent extends React.Component {
                         </View>
 
                         <View style={styles.buttonContainer}>
+                            <View style={styles.button}>
                             <Button
                                 onPress={() => this.addCard(deck.title)}
                                 title="Add Card"
                                 color="blue"
                                 accessibilityLabel="Add Card"
                             />
+                            </View>
+                            <View>
                             <Button
                                 onPress={() => this.startQuiz()}
                                 title="Start Quiz"
                                 color="blue"
                                 accessibilityLabel="Start Quiz"
-                                style={{ marginTop: 5 }}
+                                
                             />
+                            </View>
                         </View>
                     </View>
                     </FadeInView>

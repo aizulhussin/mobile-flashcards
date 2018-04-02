@@ -43,7 +43,6 @@ export default class App extends React.Component {
 
   componentDidMount(){
     //AsyncStorage.clear().then(()=>{console.log("clear")});
-    console.log("Setup");
     setLocalNotification();
     
   }

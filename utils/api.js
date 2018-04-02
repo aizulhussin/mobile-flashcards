@@ -19,15 +19,6 @@ const decks =
           description: 'Its one of the lifecycle event'
         }
       ]
-    },
-    JavaScript: {
-      title: 'JavaScript',
-      questions: [
-        {
-          question: 'What is a closure?',
-          answer: 'The combination of a function and the lexical environment within which that function was declared.'
-        }
-      ]
     }
   }
 

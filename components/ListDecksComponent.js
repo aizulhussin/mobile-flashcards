@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ListView,TouchableOpacity,Button} from 'react-n
 import { getDecks } from '../utils/api';
 import StatusBarComponent from '../components/StatusBarComponent';
 import {Ionicons} from '@expo/vector-icons'
+import {setLocalNotification,setNotificationTest} from "../utils/helper.js";
 
 
 
@@ -44,7 +45,7 @@ function DeckItem({id,deck,navigation,...props}) {
 
     var cards = deck.questions;
 
-    console.log("Props:",props);
+    //console.log("Props:",props);
     
     return (
         <TouchableOpacity onPress={()=>{
@@ -71,7 +72,6 @@ export default class ListDecksComponent extends React.Component {
           headerLeft:null,
           headerRight: 
           (<Ionicons name="md-add-circle" style={{marginRight:5}} size={32} onPress={()=>navigation.navigate("NewDeckComponent")} color="blue" />)
-          
           ,
         };
       };
@@ -103,6 +103,7 @@ export default class ListDecksComponent extends React.Component {
         getDecks().then((res) => {
             var keys = Object.keys(JSON.parse(res));
             const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+            console.log("Res:",res);
             this.setState({ decks: JSON.parse(res), dataSource: ds.cloneWithRows(keys),loading:false });
 
             

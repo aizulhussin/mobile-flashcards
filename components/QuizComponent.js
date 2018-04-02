@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-import {saveQuizCount} from '../utils/api.js';
-import {setLocalNotification,clearLocalNotification} from "../utils/helper.js";
+import { saveQuizCount } from '../utils/api.js';
+import { setLocalNotification, clearLocalNotification } from "../utils/helper.js";
 
 
 const styles = StyleSheet.create({
@@ -54,6 +54,9 @@ const styles = StyleSheet.create({
     buttonContainer: {
         marginTop: 20,
         padding: 20
+    },
+    button: {
+        marginBottom: 20
     }
 
 });
@@ -101,7 +104,7 @@ export default class QuizComponent extends React.Component {
     }
 
     answer(answer) {
-        
+
         score = this.state.score;
 
         //answer matched, increment score
@@ -114,9 +117,9 @@ export default class QuizComponent extends React.Component {
 
         if (nextIndex === this.state.questions.length) {
             //final question reached
-            saveQuizCount();
-
-            clearLocalNotification().then(()=>{
+            
+            clearLocalNotification().then(() => {
+                console.log("Question completed. Clear notification");
                 setLocalNotification();
             });
 
@@ -137,7 +140,7 @@ export default class QuizComponent extends React.Component {
 
     }
 
-    backToQuiz(){
+    backToQuiz() {
         this.setState({ showAnswer: false });
     }
 
@@ -145,8 +148,10 @@ export default class QuizComponent extends React.Component {
 
         var q = this.state.currentQuestion;
 
+
+
         if (this.state.showAnswer) {
-            
+
             return (
                 <View style={styles.container}>
                     <View style={styles.card}>
@@ -154,7 +159,7 @@ export default class QuizComponent extends React.Component {
                             <Text style={styles.question}>Show Answer</Text>
                         </View>
                         <View>
-                        <Text style={styles.question}>{this.state.currentQuestion.question}</Text>
+                            <Text style={styles.question}>{this.state.currentQuestion.question}</Text>
                         </View>
                         <View style={styles.scoreContainer}>
                             <Text style={styles.score}>{this.state.currentQuestion.answer}</Text>
@@ -187,20 +192,23 @@ export default class QuizComponent extends React.Component {
                         </View>
                         <View style={styles.buttonContainer}>
 
-
-                            <Button
-                                onPress={() => this.restartQuiz()}
-                                title="Restart Quiz"
-                                color="black"
-                                accessibilityLabel="Restart Quiz"
-                            />
-                            <Button
-                                onPress={() => this.backToDeck()}
-                                title="Back To Deck"
-                                color="black"
-                                style={{marginTop:5}}
-                                accessibilityLabel="Back To Deck"
-                            />
+                            <View style={styles.button}>
+                                <Button
+                                    onPress={() => this.restartQuiz()}
+                                    title="Restart Quiz"
+                                    color="black"
+                                    accessibilityLabel="Restart Quiz"
+                                />
+                                <View style={styles.button}>
+                                    <Button
+                                        onPress={() => this.backToDeck()}
+                                        title="Back To Deck"
+                                        color="black"
+                                        style={{ marginTop: 5 }}
+                                        accessibilityLabel="Back To Deck"
+                                    />
+                                </View>
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -219,27 +227,32 @@ export default class QuizComponent extends React.Component {
                         <Text style={styles.question}>{q.question}</Text>
                     </View>
                     <View style={styles.buttonContainer}>
-                        <Button
-                            onPress={() => this.answer('Yes')}
-                            title="Correct"
-                            color="green"
-                            accessibilityLabel="Correct"
-                        />
-                        <Button
-                            onPress={() => this.answer('No')}
-                            title="Incorrect"
-                            color="red"
-                            style={{marginTop:5}}
-                            accessibilityLabel="Incorrect"
-                        />
-
-                        <Button
-                            onPress={() => this.showAnswer()}
-                            title="Show Answer"
-                            color="black"
-                            style={{marginTop:5}}
-                            accessibilityLabel="Show Answer"
-                        />
+                        <View style={styles.button}>
+                            <Button
+                                onPress={() => this.answer('Yes')}
+                                title="Correct"
+                                color="green"
+                                accessibilityLabel="Correct"
+                            />
+                        </View>
+                        <View style={styles.button}>
+                            <Button
+                                onPress={() => this.answer('No')}
+                                title="Incorrect"
+                                color="red"
+                                style={{ marginTop: 5 }}
+                                accessibilityLabel="Incorrect"
+                            />
+                        </View>
+                        <View style={styles.button}>
+                            <Button
+                                onPress={() => this.showAnswer()}
+                                title="Show Answer"
+                                color="black"
+                                style={{ marginTop: 5 }}
+                                accessibilityLabel="Show Answer"
+                            />
+                        </View>
                     </View>
                 </View>
             </View>
