@@ -26,6 +26,7 @@ const decks =
 
 
 export function getDecks() {
+  console.log("KEY IS ",KEY);
   return AsyncStorage.getItem(KEY)
     .then(parseResult);
 }
@@ -88,16 +89,13 @@ function parse(res) {
 }
 
 function parseResult(results) {
-  console.log('parse result:', results);
   if (results === null) {
-    console.log("No result. Let's setup");
-    console.log('setup Data:', decks);
     AsyncStorage.setItem(KEY, JSON.stringify(decks));
-    AsyncStorage.setItem(QUIZ_END_COUNT,"0");
+    
     return decks;
+    
   } else {
-    //console.log("KKKK");
-    return results;
+    return JSON.parse(results);
   }
 }
 

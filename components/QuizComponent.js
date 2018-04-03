@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     },
 
     score: {
-        fontSize: 35,
+        fontSize: 18,
         color: '#000000',
         fontWeight: 'bold'
     },
@@ -185,10 +185,11 @@ export default class QuizComponent extends React.Component {
                 <View style={styles.container}>
                     <View style={styles.card}>
                         <View style={styles.titleContainer} >
-                            <Text style={styles.question}>Yay! quiz completed!Your score is...</Text>
+                            <Text style={styles.question}>Yay! quiz completed!</Text>
                         </View>
                         <View style={styles.scoreContainer}>
-                            <Text style={styles.score}>{this.state.score} out of {this.state.totalQuestions}</Text>
+                        <Text style={styles.score}>Total Correct Answer: {this.state.score}</Text>
+                            <Text style={styles.score}>Total Questions:{this.state.totalQuestions}</Text>
                         </View>
                         <View style={styles.buttonContainer}>
 
